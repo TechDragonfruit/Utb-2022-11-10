@@ -10,6 +10,7 @@ using Workload.Data.Services;
 using Workload.Model;
 
 public class AssignmentMediator : MediatorBase, IRequestHandler<CreateAssignmentRequest, MediatorResponse>,
+    IRequestHandler<UpdateAssignmentRequest, MediatorResponse>,
     IRequestHandler<GetAssignmentRequest, MediatorResponse>,
     IRequestHandler<GetAssignmentsRequest, MediatorResponse>
 {
@@ -27,7 +28,24 @@ public class AssignmentMediator : MediatorBase, IRequestHandler<CreateAssignment
         try
         {
             Assignment assignment = await service.CreateAssignment(mapper.Map<Assignment>(request));
-            return CreateResponse(200, "Assignment created", mapper.Map<CreateAssignmentResponse>(assignment));
+            return CreateResponse(200, "Assignment created", mapper.Map<AssignmentResponse>(assignment));
+        }
+        catch (AssignmentAlreadyExistsException ex)
+        {
+            return CreateResponse(400, ex.Message, null);
+        }
+        catch (Exception ex)
+        {
+            return CreateResponse(500, ex.Message, null);
+        }
+    }
+
+    public async Task<MediatorResponse> Handle(UpdateAssignmentRequest request, CancellationToken cancellationToken)
+    {
+        try
+        {
+            Assignment assignment = await service.UpdateAssignment(mapper.Map<Assignment>(request));
+            return CreateResponse(200, "Assignment updated", mapper.Map<AssignmentResponse>(assignment));
         }
         catch (AssignmentAlreadyExistsException ex)
         {
@@ -44,7 +62,7 @@ public class AssignmentMediator : MediatorBase, IRequestHandler<CreateAssignment
         try
         {
             Assignment assignment = await service.GetAssignment(request.Id);
-            return CreateResponse(200, "Assignment found", mapper.Map<GetAssignmentResponse>(assignment));
+            return CreateResponse(200, "Assignment found", mapper.Map<AssignmentResponse>(assignment));
         }
         catch (AssignmentNotFoundException ex)
         {
@@ -62,7 +80,7 @@ public class AssignmentMediator : MediatorBase, IRequestHandler<CreateAssignment
         {
             IEnumerable<Assignment> assignment = await service.GetAssignments();
             return assignment.Any()
-                ? CreateResponse(200, "Assignments found", assignment.Select(a => mapper.Map<GetAssignmentResponse>(a)))
+                ? CreateResponse(200, "Assignments found", assignment.Select(a => mapper.Map<AssignmentResponse>(a)))
                 : CreateResponse(404, "Assignments not found", Enumerable.Empty<Assignment>());
         }
         catch (Exception ex)
