@@ -16,6 +16,7 @@ public class MediatorControllerBase : ControllerBase
     }
     protected virtual async Task<IActionResult> CallMediator(object request)
     {
+        //TODO Add logging of response.message
         return await mediator.Send(request) is not MediatorResponse response
             ? StatusCode(500, null)
             : (IActionResult)StatusCode(response.Status, response.Data);
