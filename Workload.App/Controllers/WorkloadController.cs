@@ -19,4 +19,22 @@ public class WorkloadController : MediatorControllerBase
     {
         return await CallMediator(request);
     }
+
+    [HttpPut]
+    public async Task<IActionResult> UpdateWorkload([FromBody] UpdateWorkloadRequest request)
+    {
+        return await CallMediator(request);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetWorkloadById(Guid id)
+    {
+        return await CallMediator(GetWorkloadRequest.Instance(id));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllWorkloads()
+    {
+        return await CallMediator(GetWorkloadsRequest.Instance);
+    }
 }

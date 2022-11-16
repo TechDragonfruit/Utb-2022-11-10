@@ -6,6 +6,9 @@ public class Workload
     public DateTimeOffset Start { get; set; }
     public DateTimeOffset? Stop { get; set; }
 
+    public Guid PersonId { get; set; }
+    public Guid AssignmentId { get; set; }
+
     public Person Person { get; set; }
     public Assignment Assignment { get; set; }
 }

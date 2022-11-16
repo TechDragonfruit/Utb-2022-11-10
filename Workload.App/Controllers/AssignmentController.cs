@@ -18,7 +18,7 @@ public class AssignmentController : MediatorControllerBase
         return await CallMediator(request);
     }
 
-    [HttpPost]
+    [HttpPut]
     public async Task<IActionResult> UpdateAssignment([FromBody] UpdateAssignmentRequest request)
     {
         return await CallMediator(request);
